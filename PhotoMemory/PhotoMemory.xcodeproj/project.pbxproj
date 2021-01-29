@@ -13,6 +13,7 @@
 		559946E825C1E2FB00FC34CF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 559946E725C1E2FB00FC34CF /* Preview Assets.xcassets */; };
 		559946F125C1E34900FC34CF /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559946F025C1E34900FC34CF /* ImagePicker.swift */; };
 		55E7A23025C3C5A60076C4BA /* PhotoMemoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E7A22F25C3C5A60076C4BA /* PhotoMemoryItem.swift */; };
+		55E7A23325C3C9F20076C4BA /* PhotoMemoryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55E7A23225C3C9F20076C4BA /* PhotoMemoryDetailView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		559946E925C1E2FB00FC34CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		559946F025C1E34900FC34CF /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		55E7A22F25C3C5A60076C4BA /* PhotoMemoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoMemoryItem.swift; sourceTree = "<group>"; };
+		55E7A23225C3C9F20076C4BA /* PhotoMemoryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoMemoryDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				559946E625C1E2FB00FC34CF /* Preview Content */,
 				559946F025C1E34900FC34CF /* ImagePicker.swift */,
 				55E7A22F25C3C5A60076C4BA /* PhotoMemoryItem.swift */,
+				55E7A23225C3C9F20076C4BA /* PhotoMemoryDetailView.swift */,
 			);
 			path = PhotoMemory;
 			sourceTree = "<group>";
@@ -145,6 +148,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				559946F125C1E34900FC34CF /* ImagePicker.swift in Sources */,
+				55E7A23325C3C9F20076C4BA /* PhotoMemoryDetailView.swift in Sources */,
 				559946E325C1E2F600FC34CF /* ContentView.swift in Sources */,
 				55E7A23025C3C5A60076C4BA /* PhotoMemoryItem.swift in Sources */,
 				559946E125C1E2F600FC34CF /* PhotoMemoryApp.swift in Sources */,
