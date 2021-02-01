@@ -11,6 +11,7 @@ import UIKit
 struct PhotoMemoryDetailView: View {
     @Environment(\.presentationMode) var presentationMode
     @State public var photoItem: PhotoMemoryItem
+    @State public var photoStream: PhotoItemStream
     @State private var showValidationAlert = false
     @State private var validationError = ""
     
@@ -48,6 +49,7 @@ struct PhotoMemoryDetailView: View {
         }
         // TOOD: Save document and post
         print("Saving")
+        photoStream.upsert(item: photoItem)
         
         presentationMode.wrappedValue.dismiss()
     }
@@ -55,8 +57,9 @@ struct PhotoMemoryDetailView: View {
 
 struct PhotoMemoryDetailView_Previews: PreviewProvider {
     static var previews: some View {
+        let photoStream = PhotoItemStream()
         let img = UIImage(systemName: "plus")!
         let photoMemory = PhotoMemoryItem(fileName: "Test Image", image: img, description: "My image")
-        return PhotoMemoryDetailView(photoItem: photoMemory)
+        return PhotoMemoryDetailView(photoItem: photoMemory, photoStream: photoStream)
     }
 }

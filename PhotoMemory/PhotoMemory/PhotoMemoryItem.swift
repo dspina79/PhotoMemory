@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class PhotoMemoryItem: Codable, Identifiable {
+class PhotoMemoryItem: Codable, Identifiable, Comparable {
     enum CodingKeys: CodingKey {
         case id, fileName, imageData, fileDescription
     }
@@ -25,6 +25,13 @@ class PhotoMemoryItem: Codable, Identifiable {
         }
     }
     
+    static func < (lhs: PhotoMemoryItem, rhs: PhotoMemoryItem) -> Bool {
+        return lhs.fileName < rhs.fileName
+    }
+    
+    static func ==(lhs: PhotoMemoryItem, rhs: PhotoMemoryItem) -> Bool {
+        return lhs.id == rhs.id
+    }
     
     init(fileName: String?, image: UIImage?, description: String?) {
         self.id = UUID()
@@ -66,4 +73,13 @@ class PhotoMemoryItem: Codable, Identifiable {
 
 class PhotoItemStream: Codable {
     var photoMemories = [PhotoMemoryItem]()
+    
+    func upsert(item: PhotoMemoryItem) {
+        if photoMemories.contains(where: {$0.id == item.id}) {
+            let index = photoMemories.firstIndex(where: {$0.id == item.id})
+            photoMemories[index!] = item
+        } else {
+            photoMemories.append(item)
+        }
+    }
 }

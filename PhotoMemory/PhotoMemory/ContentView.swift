@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import FileProvider
 
 struct ContentView: View {
     @State private var showNewSheet = false
+    @State private var photoStream = PhotoItemStream()
     var body: some View {
         NavigationView {
             VStack{
@@ -19,6 +21,32 @@ struct ContentView: View {
             })
         }.sheet(isPresented: $showNewSheet) {
             PhotoMemoryDetailView(photoItem: PhotoMemoryItem(fileName: "", image: nil, description: ""))
+        }
+    }
+    
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentationDirectory, in: .userDomainMask)
+        return paths[0]
+    }
+    
+    func loadData() {
+        let fileName = getDocumentsDirectory().appendingPathComponent("PersonalPhotoStream")
+        do {
+            let data = try Data(contentsOf: fileName)
+            self.photoStream = try JSONDecoder().decode(PhotoItemStream.self, from: data)
+        } catch {
+            self.photoStream = PhotoItemStream()
+            print("Unable to load data properly")
+        }
+    }
+    
+    func saveStream() {
+        do {
+            let file = getDocumentsDirectory().appendingPathComponent("PersonalPhotoStream")
+            let jsonData = try JSONEncoder().encode(self.photoStream)
+            try jsonData.write(to: file, options: [.atomicWrite, .completeFileProtection]) // all of it and encrypted
+        } catch {
+            print("Unable to save data")
         }
     }
 }
