@@ -71,7 +71,7 @@ class PhotoMemoryItem: Codable, Identifiable, Comparable {
     }
 }
 
-class PhotoItemStream: Codable {
+class PhotoItemStream: Codable, ObservableObject {
     var photoMemories = [PhotoMemoryItem]()
     
     func upsert(item: PhotoMemoryItem) {
@@ -80,6 +80,36 @@ class PhotoItemStream: Codable {
             photoMemories[index!] = item
         } else {
             photoMemories.append(item)
+        }
+    }
+    
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
+    }
+    
+    func reload() {
+        let photoItemStream: PhotoItemStream
+        let fileName = getDocumentsDirectory().appendingPathComponent("personaphotomemory.json")
+        do {
+            let data = try Data(contentsOf: fileName)
+            photoItemStream = try JSONDecoder().decode(PhotoItemStream.self, from: data)
+        } catch {
+            photoItemStream = PhotoItemStream()
+            print("Unable to load data properly")
+        }
+        self.photoMemories = photoItemStream.photoMemories
+    }
+    
+    func save() {
+        do {
+            let file = getDocumentsDirectory().appendingPathComponent("personaphotomemory.json")
+            let jsonData = try JSONEncoder().encode(self)
+            try jsonData.write(to: file, options: [.atomicWrite, .completeFileProtection]) // all of it and encrypted
+            reload()
+        } catch {
+            print("Unable to save data")
+            print("\(error.localizedDescription)")
         }
     }
 }

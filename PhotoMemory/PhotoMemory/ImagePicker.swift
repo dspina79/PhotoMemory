@@ -8,37 +8,39 @@
 import SwiftUI
 
 struct ImagePicker : UIViewControllerRepresentable {
-    class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+    class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+        let parent: ImagePicker
         
-        var parent: ImagePicker
-        init(_ parent: ImagePicker) {
-            self.parent = parent
+        init(_ picker: ImagePicker) {
+            print("In ImagePicker constructor")
+            self.parent = picker
         }
         
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            if let image = info[.originalImage] as? UIImage {
-                parent.image = image
+            print("In imagePickerController")
+            if let uiImage = info[.originalImage] as? UIImage {
+                parent.image = uiImage
             }
             
             parent.presentationMode.wrappedValue.dismiss()
         }
     }
     
-    @Binding var image: UIImage?
     @Environment(\.presentationMode) var presentationMode
+    @Binding var image: UIImage?
+    
+    func makeUIViewController(context: UIViewControllerRepresentableContext<ImagePicker>) -> UIImagePickerController {
+        print("In makeUIViewController")
+        let picker = UIImagePickerController()
+        picker.delegate = context.coordinator
+        return picker
+    }
     
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
-    func makeUIViewController(context: UIViewControllerRepresentableContext<ImagePicker>) -> UIImagePickerController {
-        let controller = UIImagePickerController()
-        controller.delegate = context.coordinator
-        return controller
+    
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: UIViewControllerRepresentableContext<ImagePicker>) {
+        // do something
     }
-    
-    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {
-    }
-    
-    typealias UIViewControllerType = UIImagePickerController
-    
 }

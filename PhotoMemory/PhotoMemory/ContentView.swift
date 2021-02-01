@@ -14,23 +14,42 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack{
-                Text("To Be Completed!")
+                
+                List(photoStream.photoMemories.sorted()) {item in
+                    NavigationLink(destination: PhotoMemoryDetailView(photoItem: item, photoStream: $photoStream)) {
+                        HStack {
+                            Image(uiImage: item.wrappedImage)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 40, height: 40)
+                            VStack(alignment: .leading) {
+                                Text("\(item.fileName)")
+                                    .font(.headline)
+                                Text("\(item.fileDescription)")
+                                    .font(.subheadline)
+                            }
+                        }
+                    }
+                }
             }.navigationBarTitle(Text("Photo Memory"))
             .navigationBarItems(trailing: Button("New"){
                 self.showNewSheet = true
             })
-        }.sheet(isPresented: $showNewSheet) {
-            PhotoMemoryDetailView(photoItem: PhotoMemoryItem(fileName: "", image: nil, description: ""))
+        }
+        .onAppear(perform: loadData)
+        .sheet(isPresented: $showNewSheet, onDismiss: loadData) {
+            let photoItem = PhotoMemoryItem(fileName: "", image: nil, description: "")
+            PhotoMemoryDetailView(photoItem: photoItem, photoStream: $photoStream)
         }
     }
     
     func getDocumentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentationDirectory, in: .userDomainMask)
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return paths[0]
     }
     
     func loadData() {
-        let fileName = getDocumentsDirectory().appendingPathComponent("PersonalPhotoStream")
+        let fileName = getDocumentsDirectory().appendingPathComponent("personaphotomemory.json")
         do {
             let data = try Data(contentsOf: fileName)
             self.photoStream = try JSONDecoder().decode(PhotoItemStream.self, from: data)
@@ -41,13 +60,7 @@ struct ContentView: View {
     }
     
     func saveStream() {
-        do {
-            let file = getDocumentsDirectory().appendingPathComponent("PersonalPhotoStream")
-            let jsonData = try JSONEncoder().encode(self.photoStream)
-            try jsonData.write(to: file, options: [.atomicWrite, .completeFileProtection]) // all of it and encrypted
-        } catch {
-            print("Unable to save data")
-        }
+        loadData()
     }
 }
 
