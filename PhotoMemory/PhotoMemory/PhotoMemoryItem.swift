@@ -9,32 +9,54 @@ import Foundation
 import UIKit
 
 class PhotoMemoryItem: Codable, Identifiable {
+    enum CodingKeys: CodingKey {
+        case id, fileName, imageData, fileDescription
+    }
+    
     var id: UUID
     var fileName: String
-    var imageData: Data
+    var imageData = Data()
     var fileDescription: String
-    var rawImage: UIImage
+    var rawImage: UIImage? {
+        didSet{
+            if rawImage != nil {
+                self.imageData = PhotoMemoryItem.imageToData(rawImage!)
+            }
+        }
+    }
     
-    init(fileName: String, image: UIImage, description: String) {
+    
+    init(fileName: String?, image: UIImage?, description: String?) {
         self.id = UUID()
-        self.fileName = fileName
-        self.fileDescription = description
-        self.rawImage = image
-        self.imageData = PhotoMemoryItem.imageToData(image)
+        self.fileName = fileName ?? ""
+        self.fileDescription = description ?? ""
+        
+        if image != nil {
+            self.rawImage = image!
+            self.imageData = PhotoMemoryItem.imageToData(image!)
+        }
+    }
+    
+    var wrappedImage: UIImage {
+        rawImage ?? UIImage(systemName: "plus")!
     }
     
     required init(from decoder: Decoder) throws {
-        // TODO:
+        let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        self.id = UUID()
-        self.fileName = ""
-        self.fileDescription = ""
-        self.rawImage = UIImage(systemName: "plus")!
-        self.imageData = Data()
+        self.fileName = try container.decode(String.self, forKey: .fileName)
+        self.fileDescription = try container.decode(String.self, forKey: .fileDescription)
+        self.id = try container.decode(UUID.self, forKey: .id)
+        self.imageData = try container.decode(Data.self, forKey: .imageData)
+        self.rawImage = UIImage(data: self.imageData)
     }
     
     func encode(to encoder: Encoder) throws {
-        // TODO:
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.fileName, forKey: .fileName)
+        try container.encode(self.fileDescription, forKey: .fileDescription)
+        try container.encode(self.id, forKey: .id)
+        try container.encode(self.imageData, forKey: .imageData)
     }
     
     static func imageToData(_ image: UIImage) -> Data {

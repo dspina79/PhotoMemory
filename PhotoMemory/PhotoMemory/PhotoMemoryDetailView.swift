@@ -16,7 +16,11 @@ struct PhotoMemoryDetailView: View {
     
     var body: some View {
         VStack {
-            Image(uiImage: photoItem.rawImage)
+            Button("Get") {
+                    ImagePicker(image: $photoItem.rawImage)
+                
+            }
+            Image(uiImage: photoItem.wrappedImage)
                 .resizable()
                 .scaledToFit()
             Spacer()
@@ -30,7 +34,7 @@ struct PhotoMemoryDetailView: View {
             }
         }
         .alert(isPresented: $showValidationAlert) {
-            Alert(title: Text("Cannot Save"), message: Text(validationError), dismissButton: .default(Text("Ok")))f
+            Alert(title: Text("Cannot Save"), message: Text(validationError), dismissButton: .default(Text("Ok")))
         }
         .onDisappear(perform: save)
     }
@@ -43,6 +47,7 @@ struct PhotoMemoryDetailView: View {
             return
         }
         // TOOD: Save document and post
+        print("Saving")
         
         presentationMode.wrappedValue.dismiss()
     }
