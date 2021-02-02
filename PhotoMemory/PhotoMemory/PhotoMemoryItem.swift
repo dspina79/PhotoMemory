@@ -10,13 +10,17 @@ import UIKit
 
 class PhotoMemoryItem: Codable, Identifiable, Comparable {
     enum CodingKeys: CodingKey {
-        case id, fileName, imageData, fileDescription
+        case id, fileName, imageData, fileDescription, longitude, latitude
     }
     
     var id: UUID
     var fileName: String
     var imageData = Data()
     var fileDescription: String
+    var longitude: Double
+    var latitude: Double
+    
+    
     var rawImage: UIImage? {
         didSet{
             if rawImage != nil {
@@ -33,10 +37,12 @@ class PhotoMemoryItem: Codable, Identifiable, Comparable {
         return lhs.id == rhs.id
     }
     
-    init(fileName: String?, image: UIImage?, description: String?) {
+    init(fileName: String?, image: UIImage?, description: String?, longitude: Double?, latitude: Double?) {
         self.id = UUID()
         self.fileName = fileName ?? ""
         self.fileDescription = description ?? ""
+        self.longitude = longitude ?? 0.00
+        self.latitude = latitude ?? 0.00
         
         if image != nil {
             self.rawImage = image!
@@ -56,6 +62,8 @@ class PhotoMemoryItem: Codable, Identifiable, Comparable {
         self.id = try container.decode(UUID.self, forKey: .id)
         self.imageData = try container.decode(Data.self, forKey: .imageData)
         self.rawImage = UIImage(data: self.imageData)
+        self.longitude = try container.decode(Double.self, forKey: .longitude)
+        self.latitude = try container.decode(Double.self, forKey: .latitude)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -64,6 +72,8 @@ class PhotoMemoryItem: Codable, Identifiable, Comparable {
         try container.encode(self.fileDescription, forKey: .fileDescription)
         try container.encode(self.id, forKey: .id)
         try container.encode(self.imageData, forKey: .imageData)
+        try container.encode(self.longitude, forKey: .longitude)
+        try container.encode(self.latitude, forKey: .latitude)
     }
     
     static func imageToData(_ image: UIImage) -> Data {
@@ -79,6 +89,8 @@ class PhotoItemStream: Codable, ObservableObject {
             let index = photoMemories.firstIndex(where: {$0.id == item.id})
             photoMemories[index!] = item
         } else {
+            // new record
+            let locFetcher = LocationFetcher()
             photoMemories.append(item)
         }
     }

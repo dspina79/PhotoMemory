@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreImage
+import MapKit
 
 struct PhotoMemoryDetailView: View {
     @Environment(\.presentationMode) var presentationMode
@@ -16,6 +17,11 @@ struct PhotoMemoryDetailView: View {
     @State private var validationError = ""
     @State private var showPickerSheet = false
     @State private var currentImage: UIImage?
+    @State public var currentLocation: CLLocationCoordinate2D
+    @State private var showMapDetails = false
+    @State private var annotation: MKPointAnnotation?
+    
+    public var locationFetcher = LocationFetcher()
     
     var body: some View {
         VStack {
@@ -39,10 +45,17 @@ struct PhotoMemoryDetailView: View {
                 TextField("Description", text: $photoItem.fileDescription)
             }
             
+            if photoItem.latitude != 0 && annotation != nil {
+                MapView(centerCoordinate: $currentLocation, selectedPlace: $annotation, showingPlaceDetails: $showMapDetails, annotations: [annotation!])
+            }
+            
+            Text("Location: \(photoItem.longitude), \(photoItem.latitude)")
+            
             Button("Save") {
                 save()
             }
         }
+        .onAppear(perform: loadAnnotationData)
         .sheet(isPresented: $showPickerSheet) {
             ImagePicker(image: $currentImage)
         }
@@ -50,6 +63,16 @@ struct PhotoMemoryDetailView: View {
             Alert(title: Text("Cannot Save"), message: Text(validationError), dismissButton: .default(Text("Ok")))
         }
         .onDisappear(perform: save)
+    }
+    
+    func loadAnnotationData() {
+        locationFetcher.start()
+        if photoItem.latitude != 0 {
+            currentLocation = CLLocationCoordinate2D(latitude: photoItem.latitude, longitude: photoItem.longitude)
+            self.annotation = MKPointAnnotation()
+            self.annotation?.coordinate = currentLocation
+            self.annotation?.title = photoItem.fileName
+        }
     }
     
     func save() -> Void {
@@ -60,6 +83,12 @@ struct PhotoMemoryDetailView: View {
             validationError = "A valid image title must be provided."
             return
         }
+        
+        if let location = self.locationFetcher.lastKnownLocation {
+            photoItem.longitude = location.longitude
+            photoItem.latitude = location.latitude
+        }
+        
         photoStream.upsert(item: photoItem)
         photoStream.save()
         
@@ -72,7 +101,8 @@ struct PhotoMemoryDetailView_Previews: PreviewProvider {
         
         let photoStream = PhotoItemStream()
         let img = UIImage(systemName: "plus")!
-        let photoMemory = PhotoMemoryItem(fileName: "Test Image", image: img, description: "My image")
-        return PhotoMemoryDetailView(photoItem: photoMemory, photoStream: .constant(photoStream))
+        let photoMemory = PhotoMemoryItem(fileName: "Test Image", image: img, description: "My image", longitude: 0, latitude:  0)
+        let cfLocation = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+        return PhotoMemoryDetailView(photoItem: photoMemory, photoStream: .constant(photoStream), currentLocation: cfLocation)
     }
 }

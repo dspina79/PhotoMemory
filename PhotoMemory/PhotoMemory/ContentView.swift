@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FileProvider
+import MapKit
 
 struct ContentView: View {
     @State private var showNewSheet = false
@@ -16,7 +17,7 @@ struct ContentView: View {
             VStack{
                 
                 List(photoStream.photoMemories.sorted()) {item in
-                    NavigationLink(destination: PhotoMemoryDetailView(photoItem: item, photoStream: $photoStream)) {
+                    NavigationLink(destination: PhotoMemoryDetailView(photoItem: item, photoStream: $photoStream, currentLocation: CLLocationCoordinate2D(latitude: item.latitude, longitude: item.longitude))) {
                         HStack {
                             Image(uiImage: item.wrappedImage)
                                 .resizable()
@@ -38,8 +39,8 @@ struct ContentView: View {
         }
         .onAppear(perform: loadData)
         .sheet(isPresented: $showNewSheet, onDismiss: loadData) {
-            let photoItem = PhotoMemoryItem(fileName: "", image: nil, description: "")
-            PhotoMemoryDetailView(photoItem: photoItem, photoStream: $photoStream)
+            let photoItem = PhotoMemoryItem(fileName: "", image: nil, description: "", longitude: 0, latitude: 0)
+            PhotoMemoryDetailView(photoItem: photoItem, photoStream: $photoStream, currentLocation: CLLocationCoordinate2D(latitude: 0, longitude: 0))
         }
     }
     
