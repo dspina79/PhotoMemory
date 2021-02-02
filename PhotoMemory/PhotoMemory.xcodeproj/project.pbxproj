@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5526DCC625C8E06600E96E5F /* LocationFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5526DCC525C8E06600E96E5F /* LocationFetcher.swift */; };
+		5526DCC925C8E0BF00E96E5F /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5526DCC825C8E0BF00E96E5F /* MapView.swift */; };
 		559946E125C1E2F600FC34CF /* PhotoMemoryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559946E025C1E2F600FC34CF /* PhotoMemoryApp.swift */; };
 		559946E325C1E2F600FC34CF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 559946E225C1E2F600FC34CF /* ContentView.swift */; };
 		559946E525C1E2FB00FC34CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 559946E425C1E2FB00FC34CF /* Assets.xcassets */; };
@@ -17,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5526DCC525C8E06600E96E5F /* LocationFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFetcher.swift; sourceTree = "<group>"; };
+		5526DCC825C8E0BF00E96E5F /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		559946DD25C1E2F600FC34CF /* PhotoMemory.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoMemory.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		559946E025C1E2F600FC34CF /* PhotoMemoryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoMemoryApp.swift; sourceTree = "<group>"; };
 		559946E225C1E2F600FC34CF /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -66,6 +70,8 @@
 				559946F025C1E34900FC34CF /* ImagePicker.swift */,
 				55E7A22F25C3C5A60076C4BA /* PhotoMemoryItem.swift */,
 				55E7A23225C3C9F20076C4BA /* PhotoMemoryDetailView.swift */,
+				5526DCC525C8E06600E96E5F /* LocationFetcher.swift */,
+				5526DCC825C8E0BF00E96E5F /* MapView.swift */,
 			);
 			path = PhotoMemory;
 			sourceTree = "<group>";
@@ -147,8 +153,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5526DCC925C8E0BF00E96E5F /* MapView.swift in Sources */,
 				559946F125C1E34900FC34CF /* ImagePicker.swift in Sources */,
 				55E7A23325C3C9F20076C4BA /* PhotoMemoryDetailView.swift in Sources */,
+				5526DCC625C8E06600E96E5F /* LocationFetcher.swift in Sources */,
 				559946E325C1E2F600FC34CF /* ContentView.swift in Sources */,
 				55E7A23025C3C5A60076C4BA /* PhotoMemoryItem.swift in Sources */,
 				559946E125C1E2F600FC34CF /* PhotoMemoryApp.swift in Sources */,
